@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.app.dao.AppBusinessDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppBusiness">
+		<result column="BUSINESSID" property="businessId" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="DESCRIBE" property="describe" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="ADRESS" property="adress" jdbcType="VARCHAR" />
+		<result column="SALETIME" property="saletime" jdbcType="VARCHAR" />
+		<result column="PORTRAIT" property="portrait" jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="CREATETIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="ORDERFLAG" property="orderflag" jdbcType="DECIMAL" />
+		<result column="MODIFIER" property="modifier" jdbcType="VARCHAR" />
+		<result column="MODIFYTIME" property="modifytime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="FRONTORDER" property="frontOrder" jdbcType="DECIMAL" />
+		<result column="ISSPECIAL" property="isSpecial" jdbcType="VARCHAR" />
+		<result column="ISDISTRIBUTION" property="isDistribution" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryFrontBusiness" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppBusiness">
+		select
+		a.BUSINESSID,a.NAME,a.DESCRIBE,a.MOBILE,a.ADRESS,a.SALETIME,a.PORTRAIT,a.FRONTORDER,
+		nvl(avg(b.SCORE),0) as SCORE,a.ISSPECIAL,a.ORDERFLAG,a.ISDISTRIBUTION
+		from T_BUSINESS a
+		left join T_COMMENTS b on
+		a.BUSINESSID = B.BUSINESSID
+		and b.STATUS = 1
+		where a.STATUS = 1
+		and a.FRONTORDER != 9
+		group by
+		a.BUSINESSID,a.NAME,a.DESCRIBE,a.MOBILE,a.ADRESS,a.SALETIME,a.PORTRAIT,a.FRONTORDER,a.ISSPECIAL,a.ORDERFLAG,a.ISDISTRIBUTION
+		order by a.FRONTORDER
+	</select>
+
+	<select id="queryBusinessCategoryAll" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppBusiness">
+		select
+		a.CODENUM as CATEGORYID,a.CODETEXT as CATEGORYNAME
+		from T_SYS_CODE a
+		where a.STATUS = 1
+		and a.CODETYPE = 'SHFL'
+	</select>
+
+	<select id="queryBusinessByCategoryId" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppBusiness">
+		select
+		a.BUSINESSID,a.NAME,a.DESCRIBE,a.MOBILE,a.ADRESS,a.SALETIME,a.PORTRAIT,a.FRONTORDER,
+		nvl(avg(b.SCORE),0) as SCORE,a.ISSPECIAL,a.ORDERFLAG,a.ISDISTRIBUTION
+		from T_BUSINESS a
+		left join T_COMMENTS b on
+		a.BUSINESSID = B.BUSINESSID
+		left join T_BUSINESS_CATEGORY c on
+		a.BUSINESSID = C.BUSINESSID
+		where a.STATUS = 1
+		and c.CATEGORY =
+		#{categoryId,jdbcType=VARCHAR}
+		group by
+		a.BUSINESSID,a.NAME,a.DESCRIBE,a.MOBILE,a.ADRESS,a.SALETIME,a.PORTRAIT,a.FRONTORDER,a.ISSPECIAL,a.ORDERFLAG,a.ISDISTRIBUTION
+		order by a.ORDERFLAG
+	</select>
+
+	<select id="queryBusinessByBusinessId" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppBusiness">
+		select
+		a.BUSINESSID,a.NAME,a.DESCRIBE,a.MOBILE,a.ADRESS,a.SALETIME,a.PORTRAIT,a.FRONTORDER,
+		nvl(avg(b.SCORE),0) as SCORE,c.CATEGORY as CATEGORYID,d.CODETEXT as
+		CATEGORYNAME,a.ISSPECIAL,a.ORDERFLAG,a.ISDISTRIBUTION
+		from T_BUSINESS a
+		left join T_COMMENTS b on
+		a.BUSINESSID =
+		B.BUSINESSID
+		left join T_BUSINESS_CATEGORY c on
+		a.BUSINESSID =
+		C.BUSINESSID
+		left join T_SYS_CODE d on
+		c.CATEGORY = d.CODENUM
+		and d.STATUS = 1
+		and d.CODETYPE = 'SHFL'
+		where
+		a.STATUS = 1
+		and a.BUSINESSID =
+		#{businessId,jdbcType=VARCHAR}
+		group by
+		a.BUSINESSID,a.NAME,a.DESCRIBE,a.MOBILE,a.ADRESS,a.SALETIME,a.PORTRAIT,a.FRONTORDER,c.CATEGORY,d.CODETEXT,a.ISSPECIAL,a.ORDERFLAG,a.ISDISTRIBUTION
+		order by a.ORDERFLAG
+	</select>
+
+	<select id="queryBusinessByBusinessName" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppBusiness">
+		select
+		a.BUSINESSID,a.NAME,a.DESCRIBE,a.MOBILE,a.ADRESS,a.SALETIME,a.PORTRAIT,a.FRONTORDER,
+		nvl(avg(b.SCORE),0) as SCORE,c.CATEGORY as CATEGORYID,d.CODETEXT as
+		CATEGORYNAME,a.ISSPECIAL,a.ORDERFLAG,a.ISDISTRIBUTION
+		from T_BUSINESS a
+		left join T_COMMENTS b on
+		a.BUSINESSID =
+		B.BUSINESSID
+		left join T_BUSINESS_CATEGORY c on
+		a.BUSINESSID =
+		C.BUSINESSID
+		left join T_SYS_CODE d on
+		c.CATEGORY = d.CODENUM
+		and d.CODETYPE = 'SHFL'
+		and d.STATUS = 1
+		where
+		a.STATUS = 1
+		and a.NAME like
+		CONCAT(CONCAT('%',#{name,jdbcType=VARCHAR}),'%')
+		group by
+		a.BUSINESSID,a.NAME,a.DESCRIBE,a.MOBILE,a.ADRESS,a.SALETIME,a.PORTRAIT,a.FRONTORDER,c.CATEGORY,d.CODETEXT,a.ISSPECIAL,a.ORDERFLAG,a.ISDISTRIBUTION
+		order by a.ORDERFLAG
+	</select>
+	
+	<select id="queryBusinessByGrade" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppBusiness">
+		select
+		a.BUSINESSID,a.NAME,a.DESCRIBE,a.MOBILE,a.ADRESS,a.SALETIME,a.PORTRAIT,a.FRONTORDER,
+		nvl(avg(b.SCORE),0) as SCORE,c.CATEGORY as CATEGORYID,d.CODETEXT as
+		CATEGORYNAME,a.ISSPECIAL,a.ORDERFLAG,a.ISDISTRIBUTION
+		from T_BUSINESS a
+		left join T_COMMENTS b on
+		a.BUSINESSID =
+		B.BUSINESSID
+		left join T_BUSINESS_CATEGORY c on
+		a.BUSINESSID =
+		C.BUSINESSID
+		left join T_SYS_CODE d on
+		c.CATEGORY = d.CODENUM
+		and d.CODETYPE = 'SHFL'
+		and d.STATUS = 1
+		where
+		a.STATUS = 1
+		and a.ISSPECIAL = 1
+		group by
+		a.BUSINESSID,a.NAME,a.DESCRIBE,a.MOBILE,a.ADRESS,a.SALETIME,a.PORTRAIT,a.FRONTORDER,c.CATEGORY,d.CODETEXT,a.ISSPECIAL,a.ORDERFLAG,a.ISDISTRIBUTION
+		order by a.ORDERFLAG
+	</select>
+</mapper>

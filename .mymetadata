@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="qhmarket Maven Webapp"
+  id="myeclipse.1463731663480"
+  context-root="/qhmarket"
+  j2ee-spec="6.0"
+  archive="qhmarket Maven Webapp.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

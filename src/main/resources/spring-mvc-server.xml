@@ -1,0 +1,44 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+      http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+      http://www.springframework.org/schema/tx 
+      http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-3.0.xsd
+         ">
+
+
+	<bean id="alipayConfig" class="com.qh.app.resource.pay.config.AlipayConfig">
+		<property name="partner" value="${ALIY_PARTNER}" />
+		<property name="seller" value="${ALIY_SELLER}" />
+		<property name="rsaPrivate" value="${ALIY_RSA_PRIVATE}" />
+		<property name="rsaPublic" value="${ALIY_RSA_PUBLIC}" />
+		<property name="payNotifyUrl" value="${ALIY_PAY_NOTIFY_URL}" />
+		<property name="inputCharset" value="${ALIY_input_charset}" />
+		<property name="signType" value="${ALIY_sign_type}" />
+		<property name="logPath" value="${ALIY_log_path}" />
+		<property name="httpsVerifyUrl" value="${ALIY_HTTPS_VERIFY_URL}" />
+	</bean>
+
+	<bean id="wxpayConfig" class="com.qh.app.resource.pay.config.WxpayConfig">
+		<property name="key" value="${WX_KEY}" />
+		<property name="appid" value="${WX_APPID}" />
+		<property name="mchid" value="${WX_MCH_ID}" />
+		<property name="payNotifyUrl" value="${WX_PAY_NOTIFY_URL}" />
+		<property name="wxUrl" value="${WX_URL}" />
+		<property name="tradeType" value="${WX_TRADE_TYPE}" />
+	</bean>
+
+
+	<bean id="ftpConfig" class="com.qh.app.resource.file.entity.FTPConfig">
+		<property name="port" value="${ftp_port}" />
+		<property name="username" value="${ftp_username}" />
+		<property name="password" value="${ftp_password}" />
+		<property name="ftpServer" value="${ftp_server}" />
+		<property name="ftpUploadPath" value="${ftp_upload_path}" />
+	</bean>
+
+</beans>

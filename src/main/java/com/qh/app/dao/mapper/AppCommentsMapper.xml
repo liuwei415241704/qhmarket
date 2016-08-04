@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.app.dao.AppCommentsDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppComments">
+		<id column="COMMENTSID" property="commentsId" jdbcType="VARCHAR" />
+		<result column="BUSINESSID" property="businessId" jdbcType="VARCHAR" />
+		<result column="CUSTOMERID" property="customerId" jdbcType="VARCHAR" />
+		<result column="CONTENT" property="content" jdbcType="VARCHAR" />
+		<result column="COMMENTSTIME" property="commentsTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="SCORE" property="score" jdbcType="DECIMAL" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		COMMENTSID, BUSINESSID, CUSTOMERID, CONTENT,
+		COMMENTSTIME,
+		STATUS,
+		SCORE
+	</sql>
+
+	<select id="queryComments" resultMap="BaseResultMap">
+		select
+		c.COMMENTSID,
+		c.BUSINESSID, c.CUSTOMERID, c.CONTENT,
+		c.COMMENTSTIME,avg(c.SCORE) as
+		score,u.NICKNAME,u.PORTRAIT
+		from T_COMMENTS c
+		left join T_CUSTOMER u on
+		u.CUSTOMERID=c.CUSTOMERID
+		where
+		c.BUSINESSID =
+		#{businessId,jdbcType=VARCHAR}
+		AND
+		c.STATUS = 1
+		group by c.COMMENTSID,
+		c.BUSINESSID, c.CUSTOMERID, c.CONTENT,
+		c.COMMENTSTIME,u.NICKNAME,u.PORTRAIT
+		order by
+		c.COMMENTSTIME desc
+	</select>
+
+
+
+	<insert id="addComments" parameterType="com.qh.app.entity.AppComments">
+		insert into T_COMMENTS
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			COMMENTSID,
+			<if test="businessId != null">
+				BUSINESSID,
+			</if>
+			<if test="customerId != null">
+				customerId,
+			</if>
+			<if test="content != null">
+				CONTENT,
+			</if>
+			<if test="commentsTime != null">
+				COMMENTSTIME,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="score != null">
+				SCORE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			seq_comments_id.nextval,
+			<if test="businessId != null">
+				#{businessId,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				#{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="commentsTime != null">
+				sysdate,
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=DECIMAL},
+			</if>
+			<if test="score != null">
+				#{score,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>

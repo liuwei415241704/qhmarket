@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qh.app.dao.AppStoreBusinessDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppStoreBusiness">
+		<id column="STOREID" jdbcType="VARCHAR" property="storeId" />
+		<result column="CUSTOMERID" jdbcType="VARCHAR" property="customerId" />
+		<result column="BUSINESSID" jdbcType="VARCHAR" property="businessId" />
+		<result column="STORETIME" jdbcType="TIMESTAMP" property="storeTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		STOREID, CUSTOMERID, BUSINESSID, STORETIME
+	</sql>
+
+	<resultMap id="BusinessResultMap" type="com.qh.app.entity.AppBusiness">
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="DESCRIBE" property="describe" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="SALETIME" property="saletime" jdbcType="VARCHAR" />
+		<result column="PORTRAIT" property="portrait" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="StoreBusinessResultMap" type="com.qh.app.entity.AppStoreBusiness">
+		<id column="STOREID" jdbcType="VARCHAR" property="storeId" />
+		<result column="CUSTOMERID" jdbcType="VARCHAR" property="customerId" />
+		<result column="BUSINESSID" jdbcType="VARCHAR" property="businessId" />
+		<result column="STORETIME" jdbcType="TIMESTAMP" property="storeTime" />
+		<association property="appBusiness" javaType="com.qh.app.entity.AppBusiness"
+			resultMap="BusinessResultMap" />
+	</resultMap>
+
+	<select id="queryStoreBusiness" parameterType="com.qh.app.entity.AppStoreBusiness"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_STORE a
+		where a.CUSTOMERID = #{customerId,jdbcType=VARCHAR}
+		and
+		a.BUSINESSID = #{businessId,jdbcType=VARCHAR}
+	</select>
+
+	<insert id="addStoreBusiness" parameterType="com.qh.app.entity.AppStoreBusiness">
+		<selectKey resultType="java.lang.String" keyProperty="storeId"
+			order="BEFORE">
+			SELECT SEQ_STORE_ID.nextval as storeId from dual
+		</selectKey>
+		insert into T_STORE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="storeId != null">
+				STOREID,
+			</if>
+			<if test="customerId != null">
+				CUSTOMERID,
+			</if>
+			<if test="businessId != null">
+				BUSINESSID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="storeId != null">
+				#{storeId,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				#{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="businessId != null">
+				#{businessId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<delete id="deleteStoreBusiness" parameterType="java.lang.String">
+		delete from
+		T_STORE
+		where CUSTOMERID = #{customerId,jdbcType=VARCHAR}
+		and BUSINESSID = #{businessId,jdbcType=VARCHAR}
+	</delete>
+
+	<select id="queryStoreBusinessAll" parameterType="java.lang.String"
+		resultMap="StoreBusinessResultMap">
+		select
+		a.STOREID,a.BUSINESSID,a.CUSTOMERID,a.STORETIME,b.NAME,b.DESCRIBE,b.MOBILE,b.MOBILE,b.SALETIME,b.PORTRAIT
+		from T_STORE a
+		left join T_BUSINESS b
+		on a.BUSINESSID = b.BUSINESSID
+		where a.CUSTOMERID = #{customerId,jdbcType=VARCHAR}
+		order by
+		a.STORETIME desc
+	</select>
+	
+	<select id="queryStoreIsCheck" parameterType="com.qh.app.entity.AppStoreBusiness"
+		resultMap="StoreBusinessResultMap">
+		select
+		a.STOREID,a.CUSTOMERID,a.BUSINESSID,a.STORETIME
+		from T_STORE a
+		where a.CUSTOMERID = #{customerId,jdbcType=VARCHAR}
+		and a.BUSINESSID = #{businessId,jdbcType=VARCHAR}
+	</select>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.app.dao.AppLogoDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppLogo">
+		<result column="FRONTID" property="frontId" jdbcType="VARCHAR" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="DESCRIBE" property="describe" jdbcType="VARCHAR" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="ORDERFLAG" property="orderFlag" jdbcType="VARCHAR" />
+		<result column="PORTRAIT" property="portrait" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		FRONTID, TITLE, DESCRIBE, URL, ORDERFLAG,PORTRAIT,STATUS
+	</sql>
+
+	<select id="queryLogo" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppLogo">
+		select
+		<include refid="Base_Column_List" />
+		from T_FRONTIMG
+		where STATUS = 1
+		order by ORDERFLAG
+	</select>
+
+
+</mapper>

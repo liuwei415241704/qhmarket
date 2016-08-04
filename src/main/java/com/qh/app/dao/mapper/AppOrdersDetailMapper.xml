@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.app.dao.AppOrdersDetailDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppOrdersDetail">
+		<id column="DETAILID" property="detailId" jdbcType="VARCHAR" />
+		<result column="ORDERSID" property="ordersId" jdbcType="VARCHAR" />
+		<result column="GOODSCOUNT" property="goodscount" jdbcType="INTEGER" />
+		<result column="GOODSID" property="goodsId" jdbcType="VARCHAR" />
+		<result column="PRICE" property="price" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		DETAILID, ORDERSID, GOODSCOUNT, GOODSID, PRICE
+	</sql>
+	<insert id="addOrdersDetail" parameterType="com.qh.app.entity.AppOrdersDetail">
+		insert into T_ORDERS_DETAIL
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			DETAILID,
+			<if test="detailId != null">
+				ORDERSID,
+			</if>
+			<if test="goodscount != null">
+				GOODSCOUNT,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="goodsId != null">
+				GOODSID,
+			</if>
+			<if test="price != null">
+				PRICE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			SEQ_DETAIL_ID.nextval,
+			<if test="ordersId != null">
+				#{ordersId,jdbcType=VARCHAR},
+			</if>
+			<if test="goodscount != null">
+				#{goodscount,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsId != null">
+				#{goodsId,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="queryDetailByOrdersId" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppOrdersDetail">
+		select
+		<include refid="Base_Column_List" />
+		from T_ORDERS_DETAIL a
+		where a.ORDERSID = #{ordersId,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="countSales" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		select
+		count(1)
+		from T_ORDERS_DETAIL a
+		left join T_ORDERS b on
+		a.ORDERSID = b.ORDERSID
+		where a.GOODSID = #{goodsId,jdbcType=VARCHAR}
+		and b.STATUS = 1
+	</select>
+</mapper>

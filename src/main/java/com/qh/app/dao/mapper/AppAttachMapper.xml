@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.app.dao.AppAttachDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppAttach">
+		<id column="ATTACHID" property="attachId" jdbcType="VARCHAR" />
+		<result column="GOODSID" property="goodsId" jdbcType="VARCHAR"/>
+		<result column="TYPE" property="type" jdbcType="VARCHAR" />
+		<result column="URL" property="url" jdbcType="VARCHAR" />
+		<result column="ORDERFLAG" property="orderFlag" jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="CREATETIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFIER" property="modifier" jdbcType="VARCHAR" />
+		<result column="MODIFYTIME" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ATTACHID,GOODSID,TYPE,URL,ORDERFLAG,CREATOR,CREATETIME,MODIFIER,MODIFYTIME,STATUS
+	</sql>
+	
+	<select id="queryAttachByIdAndType" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" />
+		from T_ATTACH a
+		where a.GOODSID = #{id,jdbcType=VARCHAR}
+		and a.TYPE = #{type,jdbcType=VARCHAR}
+		and a.STATUS = 1
+	</select>
+	
+	<insert id="addAttach" parameterType="com.qh.app.entity.AppAttach">
+		insert into T_ATTACH
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			ATTACHID,
+			<if test="goodsId != null">
+				GOODSID,
+			</if>
+			<if test="type != null">
+				TYPE,
+			</if>
+			<if test="url != null">
+				URL,
+			</if>
+			<if test="orderFlag != null">
+				ORDERFLAG,
+			</if>
+			<if test="creator != null">
+				CREATOR,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			seq_attach_id.nextval,
+			<if test="goodsId != null">
+				#{goodsId,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="orderFlag != null">
+				#{orderFlag,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>

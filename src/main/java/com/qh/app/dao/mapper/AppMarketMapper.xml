@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.app.dao.AppMarketDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppMarket">
+		<id column="MARKETID" property="marketId" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="PRICE" property="price" jdbcType="DECIMAL" />
+		<result column="TEL" property="tel" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="TIMESTAMP" />
+		<result column="DESCRIBE" property="describe" jdbcType="VARCHAR" />
+		<result column="CONTACTS" property="contacts" jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="MODIFIER" property="modifier" jdbcType="VARCHAR" />
+		<result column="MODIFYTIME" property="modifytime" jdbcType="TIMESTAMP" />
+		<result column="CREATETIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="KIND" property="kind" jdbcType="VARCHAR" />
+		<result column="PORTRAIT" property="portrait" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		MARKETID, NAME, PRICE, TEL,
+		ADDRESS,DESCRIBE,CREATOR,MODIFIER,MODIFYTIME,CREATETIME,
+		STATUS,KIND,PORTRAIT,
+		CONTACTS
+	</sql>
+
+	<select id="queryKindsByKindName" resultMap="BaseResultMap">
+		select
+		c.MARKETID,
+		c.NAME,
+		c.PRICE, c.TEL,
+		c.ADDRESS,c.DESCRIBE,c.CREATOR,c.CREATETIME,c.PORTRAIT,
+		c.STATUS,c.KIND,u.CODETEXT as kindName
+		from T_MARKET c
+		left join
+		T_SYS_CODE u on
+		u.CODENUM = c.KIND and u.CODETYPE like'%SCFL_%'
+		where
+		u.CODETYPE = #{kindName,jdbcType=VARCHAR}
+		AND
+		c.STATUS =
+		1
+		order by
+		c.CREATETIME desc
+	</select>
+
+
+
+	<insert id="addKinds" parameterType="com.qh.app.entity.AppMarket">
+		<selectKey resultType="java.lang.String" keyProperty="marketId"
+			order="BEFORE">
+			SELECT SEQ_MARKET_ID.nextval as marketId from dual
+		</selectKey>
+		insert into T_MARKET
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			MARKETID,
+			<if test="name != null">
+				NAME,
+			</if>
+			<if test="price != null">
+				PRICE,
+			</if>
+			<if test="tel != null">
+				TEL,
+			</if>
+			<if test="address != null">
+				ADDRESS,
+			</if>
+			<if test="describe != null">
+				DESCRIBE,
+			</if>
+			<if test="contacts != null">
+				CONTACTS,
+			</if>
+			<if test="creator != null">
+				CREATOR,
+			</if>
+			<if test="kind != null">
+				KIND,
+			</if>
+			<if test="portrait != null">
+				PORTRAIT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="marketId != null">
+				#{marketId,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="tel != null">
+				#{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="describe != null">
+				#{describe,jdbcType=VARCHAR},
+			</if>
+			<if test="contacts != null">
+				#{contacts,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="kind != null">
+				#{kind,jdbcType=VARCHAR},
+			</if>
+			<if test="portrait != null">
+				#{portrait,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updatePortrait" parameterType="com.qh.app.entity.AppMarket">
+		update T_MARKET
+		<set>
+			<if test="name != null">
+				NAME = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				PRICE = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="tel != null">
+				TEL = #{tel,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="describe != null">
+				DESCRIBE = #{describe,jdbcType=VARCHAR},
+			</if>
+			<if test="contacts != null">
+				CONTACTS = #{contacts,jdbcType=VARCHAR},
+			</if>
+			<if test="kind != null">
+				KIND = #{kind,jdbcType=VARCHAR},
+			</if>
+			<if test="portrait != null">
+				PORTRAIT = #{portrait,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where MARKETID = #{marketId,jdbcType=VARCHAR} 
+		and STATUS = 1
+	</update>
+</mapper>

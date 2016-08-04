@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.app.dao.AppSmsAuthDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppSmsAuth">
+		<id column="SMSID" property="smsid" jdbcType="VARCHAR" />
+		<result column="SMSMOBILEPHONE" property="smsphone" jdbcType="VARCHAR" />
+		<result column="SMSCODE" property="smscode" jdbcType="VARCHAR" />
+		<result column="SMSTYPE" property="smstype" jdbcType="CHAR" />
+		<result column="SMSSTATUS" property="smsstatus" jdbcType="CHAR" />
+		<result column="SMSCONTENT" property="smscontent" jdbcType="VARCHAR" />
+		<result column="CREATETIME" property="createdtime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		SMSID, SMSMOBILEPHONE, SMSCODE, SMSTYPE, SMSSTATUS, SMSCONTENT,
+		CREATETIME
+	</sql>
+	<insert id="addSmsLog" parameterType="com.qh.app.entity.AppSmsAuth">
+		insert into T_SYS_SMSAUTH
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="smsid != null">
+				SMSID,
+			</if>
+			<if test="smsphone != null">
+				SMSMOBILEPHONE,
+			</if>
+			<if test="smscode != null">
+				SMSCODE,
+			</if>
+			<if test="smstype != null">
+				SMSTYPE,
+			</if>
+			<if test="smsstatus != null">
+				SMSSTATUS,
+			</if>
+			<if test="smscontent != null">
+				SMSCONTENT,
+			</if>
+			<if test="createdtime != null">
+				CREATETIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="smsid != null">
+				#{smsid,jdbcType=VARCHAR},
+			</if>
+			<if test="smsphone != null">
+				#{smsphone,jdbcType=VARCHAR},
+			</if>
+			<if test="smscode != null">
+				#{smscode,jdbcType=VARCHAR},
+			</if>
+			<if test="smstype != null">
+				#{smstype,jdbcType=CHAR},
+			</if>
+			<if test="smsstatus != null">
+				#{smsstatus,jdbcType=CHAR},
+			</if>
+			<if test="smscontent != null">
+				#{smscontent,jdbcType=VARCHAR},
+			</if>
+			<if test="createdtime != null">
+				#{createdtime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+</mapper>

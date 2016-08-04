@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qh.app.dao.AppPayInfoDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppPayInfo">
+		<id column="PAYID" jdbcType="VARCHAR" property="payid" />
+		<result column="ORDERSID" jdbcType="VARCHAR" property="ordersid" />
+		<result column="CURRENCY" jdbcType="VARCHAR" property="currency" />
+		<result column="AMOUNT" jdbcType="DECIMAL" property="amount" />
+		<result column="CHANNEL" jdbcType="VARCHAR" property="channel" />
+		<result column="CHANNELID" jdbcType="VARCHAR" property="channelid" />
+		<result column="BANK" jdbcType="VARCHAR" property="bank" />
+		<result column="CODEURL" jdbcType="VARCHAR" property="codeurl" />
+		<result column="TRADESTATUS" jdbcType="DECIMAL" property="tradestatus" />
+		<result column="CREATEDTIME" jdbcType="TIMESTAMP" property="createdtime" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		PAYID, ORDERSID, CURRENCY, AMOUNT, CHANNEL, CHANNELID, BANK,
+		CODEURL,
+		TRADESTATUS,
+		CREATEDTIME
+	</sql>
+
+	<select id="queryAppPayInfoByOrdersId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_PAYINFO
+		where ORDERSID = #{ordersid,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		T_PAYINFO
+		where PAYID = #{payid,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.qh.app.entity.AppPayInfo">
+		insert into T_PAYINFO (PAYID,
+		ORDERSID, CURRENCY,
+		AMOUNT, CHANNEL, CHANNELID,
+		BANK, CODEURL,
+		TRADESTATUS,
+		CREATEDTIME)
+		values (#{payid,jdbcType=VARCHAR},
+		#{ordersid,jdbcType=VARCHAR},
+		#{currency,jdbcType=VARCHAR},
+		#{amount,jdbcType=DECIMAL}, #{channel,jdbcType=VARCHAR},
+		#{channelid,jdbcType=VARCHAR},
+		#{bank,jdbcType=VARCHAR},
+		#{codeurl,jdbcType=VARCHAR},
+		#{tradestatus,jdbcType=DECIMAL},
+		#{createdtime,jdbcType=TIMESTAMP})
+	</insert>
+
+	<insert id="addAppPayInfo" parameterType="com.qh.app.entity.AppPayInfo">
+		insert into T_PAYINFO
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="payid != null">
+				PAYID,
+			</if>
+			<if test="ordersid != null">
+				ORDERSID,
+			</if>
+			<if test="currency != null">
+				CURRENCY,
+			</if>
+			<if test="amount != null">
+				AMOUNT,
+			</if>
+			<if test="channel != null">
+				CHANNEL,
+			</if>
+			<if test="channelid != null">
+				CHANNELID,
+			</if>
+			<if test="bank != null">
+				BANK,
+			</if>
+			<if test="codeurl != null">
+				CODEURL,
+			</if>
+			<if test="tradestatus != null">
+				TRADESTATUS,
+			</if>
+			<if test="createdtime != null">
+				CREATEDTIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="payid != null">
+				#{payid,jdbcType=VARCHAR},
+			</if>
+			<if test="ordersid != null">
+				#{ordersid,jdbcType=VARCHAR},
+			</if>
+			<if test="currency != null">
+				#{currency,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				#{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="channel != null">
+				#{channel,jdbcType=VARCHAR},
+			</if>
+			<if test="channelid != null">
+				#{channelid,jdbcType=VARCHAR},
+			</if>
+			<if test="bank != null">
+				#{bank,jdbcType=VARCHAR},
+			</if>
+			<if test="codeurl != null">
+				#{codeurl,jdbcType=VARCHAR},
+			</if>
+			<if test="tradestatus != null">
+				#{tradestatus,jdbcType=DECIMAL},
+			</if>
+			<if test="createdtime != null">
+				#{createdtime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+
+
+	<update id="updateAppPayInfo" parameterType="com.qh.app.entity.AppPayInfo">
+		update T_PAYINFO
+		<set>
+			<if test="orderid != null">
+				ORDERSID = #{ordersid,jdbcType=VARCHAR},
+			</if>
+			<if test="currency != null">
+				CURRENCY = #{currency,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				AMOUNT = #{amount,jdbcType=DECIMAL},
+			</if>
+			<if test="channel != null">
+				CHANNEL = #{channel,jdbcType=VARCHAR},
+			</if>
+			<if test="channelid != null">
+				CHANNELID = #{channelid,jdbcType=VARCHAR},
+			</if>
+			<if test="bank != null">
+				BANK = #{bank,jdbcType=VARCHAR},
+			</if>
+			<if test="codeurl != null">
+				CODEURL = #{codeurl,jdbcType=VARCHAR},
+			</if>
+			<if test="tradestatus != null">
+				TRADESTATUS = #{tradestatus,jdbcType=DECIMAL},
+			</if>
+			<if test="createdtime != null">
+				CREATEDTIME = #{createdtime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where PAYID = #{payid,jdbcType=VARCHAR}
+	</update>
+
+
+	<update id="updateByPrimaryKey" parameterType="com.qh.app.entity.AppPayInfo">
+		update T_PAYINFO
+		set ORDERSID = #{ordersid,jdbcType=VARCHAR},
+		CURRENCY =
+		#{currency,jdbcType=VARCHAR},
+		AMOUNT = #{amount,jdbcType=DECIMAL},
+		CHANNEL = #{channel,jdbcType=VARCHAR},
+		CHANNELID =
+		#{channelid,jdbcType=VARCHAR},
+		BANK = #{bank,jdbcType=VARCHAR},
+		CODEURL
+		= #{codeurl,jdbcType=VARCHAR},
+		TRADESTATUS =
+		#{tradestatus,jdbcType=DECIMAL},
+		CREATEDTIME =
+		#{createdtime,jdbcType=TIMESTAMP}
+		where PAYID =
+		#{payid,jdbcType=VARCHAR}
+	</update>
+</mapper>

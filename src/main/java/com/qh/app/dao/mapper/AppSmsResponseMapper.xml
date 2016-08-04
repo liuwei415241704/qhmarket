@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.app.dao.AppSmsResponseDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppSmsResponse">
+		<id column="CODE" property="code" jdbcType="VARCHAR" />
+		<result column="MSG" property="msg" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		CODE, MSG
+	</sql>
+	<select id="querySmsResponse" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from T_SYS_SMSERRORLIST
+		where CODE = #{code,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qh.app.dao.AppGoodsDao">
+	<resultMap id="BaseResultMap" type="com.qh.app.entity.AppGoods">
+		<result column="GOODSID" property="goodsId" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="DESCRIBE" property="describe" jdbcType="VARCHAR" />
+		<result column="ONLINETIME" property="onlineTime" jdbcType="TIMESTAMP" />
+		<result column="BUSINESSID" property="businessId" jdbcType="VARCHAR" />
+		<result column="PRICE" property="price" jdbcType="DECIMAL" />
+		<result column="DISCOUNT" property="discount" jdbcType="DECIMAL" />
+		<result column="PORTRAIT" property="portrait" jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+		<result column="CREATETIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="NEWPRICE" property="newPrice" jdbcType="DECIMAL" />
+		<result column="ORDERFLAG" property="orderFlag" jdbcType="DECIMAL" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="queryGoodsByBusinessId" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppGoods">
+		select
+		a.GOODSID,a.NAME,a.DESCRIBE,a.ONLINETIME,a.BUSINESSID,a.PRICE,a.DISCOUNT,a.PORTRAIT,a.CREATOR,a.CREATETIME,a.NEWPRICE,a.ORDERFLAG,a.STATUS,
+		b.CAT,c.GRADE,
+		(select e.codetext
+		from t_sys_code e
+		where e.codetype =
+		'SPFL'
+		and e.codenum = b.cat) CATEGORYNAME,
+		(select f.codetext
+		from
+		t_sys_code f
+		where f.codetype = 'SPJB'
+		and f.codenum = c.grade)
+		GRADENAME
+		from T_GOODS a
+		left join
+		T_GOODS_CATEGORY b on
+		a.GOODSID =
+		b.GOODSID
+		left join T_GOODS_GRADE c on
+		a.GOODSID = c.GOODSID
+		where
+		a.STATUS = 1
+		and a.BUSINESSID = #{businessId,jdbcType=VARCHAR}
+		order by
+		a.ORDERFLAG
+	</select>
+
+	<select id="queryGoodsByGoodsId" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppGoods">
+		select
+		a.GOODSID,a.NAME,a.DESCRIBE,a.ONLINETIME,a.BUSINESSID,a.PRICE,a.DISCOUNT,a.PORTRAIT,a.CREATOR,a.CREATETIME,a.NEWPRICE,a.ORDERFLAG,a.STATUS,
+		b.CAT,c.GRADE,
+		(select e.codetext
+		from t_sys_code e
+		where e.codetype =
+		'SPFL'
+		and e.codenum = b.cat) CATEGORYNAME,
+		(select f.codetext
+		from
+		t_sys_code f
+		where f.codetype = 'SPJB'
+		and f.codenum = c.grade)
+		GRADENAME
+		from T_GOODS a
+		left join
+		T_GOODS_CATEGORY b on
+		a.GOODSID =
+		b.GOODSID
+		left join T_GOODS_GRADE c on
+		a.GOODSID = c.GOODSID
+		where
+		a.STATUS = 1
+		and a.GOODSID = #{goodsId,jdbcType=VARCHAR}
+		order by
+		a.ORDERFLAG
+	</select>
+
+	<select id="queryGoodsByGoodsName" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppGoods">
+		select
+		a.GOODSID,a.NAME,a.DESCRIBE,a.ONLINETIME,a.BUSINESSID,a.PRICE,a.DISCOUNT,a.PORTRAIT,a.CREATOR,a.CREATETIME,a.NEWPRICE,a.ORDERFLAG,a.STATUS,
+		b.CAT,c.GRADE,
+		(select e.CODETEXT
+		from T_SYS_CODE e
+		where e.CODETYPE =
+		'SPFL'
+		and e.CODENUM = b.CAT
+		and e.STATUS = 1) CATEGORYNAME,
+		(select
+		f.CODETEXT
+		from
+		T_SYS_CODE f
+		where f.CODETYPE = 'SPJB'
+		and f.CODENUM =
+		c.GRADE
+		and e.STATUS = 1)
+		GRADENAME
+		from T_GOODS a
+		left join
+		T_GOODS_CATEGORY b on
+		a.GOODSID =
+		b.GOODSID
+		left join T_GOODS_GRADE c on
+		a.GOODSID = c.GOODSID
+		where
+		a.STATUS = 1
+		and a.NAME like
+		CONCAT(CONCAT('%',#{name,jdbcType=VARCHAR}),'%')
+		order by a.ORDERFLAG
+	</select>
+
+	<select id="queryGoodsByGradeName" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppGoods">
+		SELECT a.GOODSID,
+		a.NAME,
+		a.DESCRIBE,
+		a.ONLINETIME,
+		a.BUSINESSID,
+		a.PRICE,
+		a.DISCOUNT,
+		a.PORTRAIT,
+		a.CREATOR,
+		a.CREATETIME,
+		a.NEWPRICE,
+		a.ORDERFLAG,
+		a.STATUS,
+		c.CODETEXT,
+		(SELECT f.CODETEXT
+		FROM
+		T_SYS_CODE f
+		WHERE f.CODETYPE = 'SPFL'
+		AND f.CODENUM = d.CAT)
+		CATEGORYNAME
+		FROM T_GOODS a
+		LEFT JOIN T_GOODS_GRADE b
+		ON a.GOODSID =
+		b.GOODSID
+		LEFT JOIN T_SYS_CODE c
+		ON b.GRADE = c.CODENUM
+		AND c.CODETYPE =
+		'SPJB'
+		AND c.CODETEXT = #{gradeName,jdbcType=VARCHAR}
+		LEFT JOIN
+		T_GOODS_CATEGORY d
+		ON a.GOODSID = d.GOODSID
+		WHERE a.STATUS = 1
+		AND
+		c.STATUS = 1
+		ORDER BY a.ORDERFLAG
+	</select>
+	
+	<select id="queryGoodsByGradeId" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppGoods">
+		SELECT a.GOODSID,
+		a.NAME,
+		a.DESCRIBE,
+		a.ONLINETIME,
+		a.BUSINESSID,
+		a.PRICE,
+		a.DISCOUNT,
+		a.PORTRAIT,
+		a.CREATOR,
+		a.CREATETIME,
+		a.NEWPRICE,
+		a.ORDERFLAG,
+		a.STATUS,
+		c.CODETEXT,
+		(SELECT f.CODETEXT
+		FROM
+		T_SYS_CODE f
+		WHERE f.CODETYPE = 'SPFL'
+		AND f.CODENUM = d.CAT)
+		CATEGORYNAME
+		FROM T_GOODS a
+		LEFT JOIN T_GOODS_GRADE b
+		ON a.GOODSID =
+		b.GOODSID
+		LEFT JOIN T_SYS_CODE c
+		ON b.GRADE = c.CODENUM
+		AND c.CODETYPE =
+		'SPJB'
+		AND c.CODENUM = #{gradeId,jdbcType=VARCHAR}
+		LEFT JOIN
+		T_GOODS_CATEGORY d
+		ON a.GOODSID = d.GOODSID
+		WHERE a.STATUS = 1
+		AND
+		c.STATUS = 1
+		ORDER BY a.ORDERFLAG
+	</select>
+	
+	<select id="queryGoodsByCategoryName" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppGoods">
+		SELECT a.GOODSID,
+		a.NAME,
+		a.DESCRIBE,
+		a.ONLINETIME,
+		a.BUSINESSID,
+		a.PRICE,
+		a.DISCOUNT,
+		a.PORTRAIT,
+		a.CREATOR,
+		a.CREATETIME,
+		a.NEWPRICE,
+		a.ORDERFLAG,
+		a.STATUS,
+		c.CODETEXT,
+		(SELECT f.CODETEXT
+		FROM
+		T_SYS_CODE f
+		WHERE f.CODETYPE = 'SPJB'
+		AND f.CODENUM = d.GRADE)
+		GRADENAME
+		FROM T_GOODS a
+		LEFT JOIN T_GOODS_CATEGORY b
+		ON a.GOODSID =
+		b.GOODSID
+		LEFT JOIN T_SYS_CODE c
+		ON b.CAT = c.CODENUM
+		AND c.CODETYPE =
+		'SPFL'
+		AND c.CODETEXT = #{categoryName,jdbcType=VARCHAR}
+		LEFT JOIN
+		T_GOODS_GRADE d
+		ON a.GOODSID = d.GOODSID
+		WHERE a.STATUS = 1
+		AND
+		c.STATUS = 1
+		ORDER BY a.ORDERFLAG
+	</select>
+	
+	<select id="queryGoodsByCategoryId" resultMap="BaseResultMap"
+		parameterType="com.qh.app.entity.AppGoods">
+		SELECT a.GOODSID,
+		a.NAME,
+		a.DESCRIBE,
+		a.ONLINETIME,
+		a.BUSINESSID,
+		a.PRICE,
+		a.DISCOUNT,
+		a.PORTRAIT,
+		a.CREATOR,
+		a.CREATETIME,
+		a.NEWPRICE,
+		a.ORDERFLAG,
+		a.STATUS,
+		c.CODETEXT,
+		(SELECT f.CODETEXT
+		FROM
+		T_SYS_CODE f
+		WHERE f.CODETYPE = 'SPJB'
+		AND f.CODENUM = d.GRADE)
+		GRADENAME
+		FROM T_GOODS a
+		LEFT JOIN T_GOODS_CATEGORY b
+		ON a.GOODSID =
+		b.GOODSID
+		LEFT JOIN T_SYS_CODE c
+		ON b.CAT = c.CODENUM
+		AND c.CODETYPE =
+		'SPFL'
+		AND c.CODENUM = #{categoryId,jdbcType=VARCHAR}
+		LEFT JOIN
+		T_GOODS_GRADE d
+		ON a.GOODSID = d.GOODSID
+		WHERE a.STATUS = 1
+		AND
+		c.STATUS = 1
+		ORDER BY a.ORDERFLAG
+	</select>
+</mapper>
